@@ -100,8 +100,7 @@ def main():
 
     driver = GraphDatabase.driver(
         NEO4J_URI,
-        auth=(NEO4J_USERNAME, NEO4J_PASSWORD),
-        encrypted=True
+        auth=(NEO4J_USERNAME, NEO4J_PASSWORD)
     )
 
     with driver.session() as session:
