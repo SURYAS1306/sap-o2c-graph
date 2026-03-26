@@ -20,6 +20,24 @@ User Query (Natural Language)
 -> Results returned and visualized  
 -> Streamlit UI renders graph and chat interface  
 
+## Architecture Diagram
+
+```mermaid
+flowchart TD
+
+A[User Query (Natural Language)] --> B[Streamlit UI]
+
+B --> C[Groq LLM]
+C -->|Generate Cypher Query| D[Backend]
+
+D --> E[Neo4j AuraDB]
+
+E -->|Query Results| D
+D --> F[Graph Visualization (PyVis)]
+
+F --> B
+```
+
 ### Key Design Decisions
 
 - Used a **graph-based architecture** because SAP O2C data is highly relational (customer → order → delivery → product).
