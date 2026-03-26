@@ -11,7 +11,7 @@ driver = GraphDatabase.driver(
     st.secrets["NEO4J_URI"],
     auth=(
         st.secrets["NEO4J_USER"],
-        st.secrets["NEO4J_PASSWORD"]
+        st.secrets["NEO4J_PASS"]
     )
 )
 
