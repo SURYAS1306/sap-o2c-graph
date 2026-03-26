@@ -5,9 +5,9 @@ from typing import Dict, Any, Iterable, List, Optional
 
 from neo4j import GraphDatabase
 
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USERNAME = "neo4j"
-NEO4J_PASSWORD = "Surya1306@"
+NEO4J_URI = "neo4j+s://47689a7a.databases.neo4j.io"
+NEO4J_USERNAME = "47689a7a"
+NEO4J_PASSWORD = "w_mSU0XvXhC4fkOQkgCez9oQlDwJ8IswSgrVxfk6WPw"
 
 DATA_DIR = Path("./sap-o2c-data")
 BATCH_SIZE = 1000
@@ -101,6 +101,7 @@ def main():
     driver = GraphDatabase.driver(
         NEO4J_URI,
         auth=(NEO4J_USERNAME, NEO4J_PASSWORD),
+        encrypted=True
     )
 
     with driver.session() as session:

@@ -4,9 +4,15 @@ from groq import Groq
 # -----------------------------
 # Neo4j Connection
 # -----------------------------
+import streamlit as st
+from neo4j import GraphDatabase
+
 driver = GraphDatabase.driver(
-    "bolt://localhost:7687",
-    auth=("neo4j", "Surya1306@")
+    st.secrets["NEO4J_URI"],
+    auth=(
+        st.secrets["NEO4J_USER"],
+        st.secrets["NEO4J_PASSWORD"]
+    )
 )
 
 # -----------------------------
