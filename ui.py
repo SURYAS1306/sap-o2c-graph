@@ -227,7 +227,7 @@ def render_graph(graph_data: Dict[str, Any]) -> None:
 
         net.add_node(
             node_id,
-            label=display_label,
+            label=display_label if is_highlighted else "",
             title=title,
             color=node_color,
             size=node_size,
