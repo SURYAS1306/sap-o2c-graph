@@ -37,6 +37,8 @@ D --> F[Graph Visualization]
 
 F --> B
 ```
+This architecture separates UI, LLM processing, and graph querying into distinct layers, enabling modularity, scalability, and easier debugging.
+
 
 ### Key Design Decisions
 
