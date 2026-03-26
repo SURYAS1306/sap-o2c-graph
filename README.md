@@ -25,15 +25,15 @@ User Query (Natural Language)
 ```mermaid
 flowchart TD
 
-A[User Query (Natural Language)] --> B[Streamlit UI]
+A[User Query] --> B[Streamlit UI]
 
 B --> C[Groq LLM]
-C -->|Generate Cypher Query| D[Backend]
+C --> D[Backend]
 
 D --> E[Neo4j AuraDB]
 
-E -->|Query Results| D
-D --> F[Graph Visualization (PyVis)]
+E --> D
+D --> F[Graph Visualization]
 
 F --> B
 ```
