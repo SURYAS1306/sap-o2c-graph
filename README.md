@@ -20,6 +20,8 @@ User Query (Natural Language)
 -> Results returned and visualized  
 -> Streamlit UI renders graph and chat interface  
 
+---
+
 ## Architecture Diagram
 
 ```mermaid
@@ -27,27 +29,30 @@ flowchart TD
 
 A[User Query] --> B[Streamlit UI]
 
-B --> C[Groq LLM]
-C --> D[Backend]
+B --> C[LLM Service]
+C -->|Cypher Query| D[Query Engine]
 
 D --> E[Neo4j AuraDB]
 
-E --> D
-D --> F[Graph Visualization]
+E -->|Results| D
+D --> F[Graph Visualization Layer]
 
 F --> B
 ```
+
 This architecture separates UI, LLM processing, and graph querying into distinct layers, enabling modularity, scalability, and easier debugging.
 
+---
 
-### Key Design Decisions
+## Key Design Decisions
 
-- Used a **graph-based architecture** because SAP O2C data is highly relational (customer → order → delivery → product).
-- Decoupled components:
-  - UI (Streamlit)
-  - Backend (query execution + LLM integration)
-  - Database (Neo4j)
-- LLM is used only for **query generation**, not for storing or retrieving data directly.
+- Selected a graph-based architecture as SAP O2C data is inherently relational (customer -> order -> delivery -> product), enabling efficient multi-hop traversal and relationship-centric querying.
+- Designed a layered system:
+  - Presentation Layer (Streamlit UI)
+  - LLM Layer (natural language to Cypher conversion)
+  - Query Layer (backend execution engine)
+  - Data Layer (Neo4j graph database)
+- LLM is used strictly for query generation, ensuring deterministic data retrieval from the database.
 
 ---
 
@@ -59,16 +64,16 @@ This architecture separates UI, LLM processing, and graph querying into distinct
   - Customers place Orders
   - Orders generate Deliveries
   - Deliveries include Products
-- Neo4j allows:
+- Neo4j enables:
   - Efficient relationship traversal
   - Flexible schema for evolving enterprise data
-  - Powerful querying using Cypher
+  - Expressive querying using Cypher
 
 ### Cloud Deployment
 
 - Initially developed using local Neo4j
-- Migrated to **Neo4j AuraDB (cloud)** for deployment compatibility
-- Enabled external access from Streamlit Cloud
+- Migrated to Neo4j AuraDB (cloud) for production deployment
+- Enabled secure external access from Streamlit Cloud
 
 ---
 
@@ -79,19 +84,19 @@ The LLM is used to convert natural language into Cypher queries.
 ### Approach
 
 - Structured prompts instruct the model to:
-  - Only generate Cypher queries
-  - Use known node labels (Customer, Order, Delivery, Product)
+  - Generate only Cypher queries
+  - Use predefined schema entities (Customer, Order, Delivery, Product)
   - Follow valid relationship patterns
 
 ### Example Prompt Pattern
 
 "Convert the following question into a Cypher query using the SAP O2C schema. Only return the query."
 
-### Design Choices
+### Design Considerations
 
-- Avoid free-form responses from LLM
-- Enforce query-only outputs
-- Keep prompts simple and deterministic to reduce hallucination
+- Avoid free-form responses from the LLM
+- Enforce query-only outputs for reliability
+- Keep prompts deterministic to reduce hallucination risk
 
 ---
 
@@ -101,20 +106,21 @@ To ensure safety and correctness:
 
 ### 1. Query Restriction
 - Only SAP dataset-related queries are allowed
-- Prevents unrelated or unsafe queries
+- Prevents irrelevant or unsafe operations
 
 ### 2. Controlled LLM Output
-- LLM is instructed to return only Cypher queries
-- No execution of arbitrary code
+- LLM is constrained to generate Cypher queries only
+- No execution of arbitrary code or instructions
 
-### 3. Secure Secret Handling
+### 3. Secure Secret Management
 - API keys stored in `.env` (local)
-- Stored in Streamlit secrets for deployment
-- Never committed to GitHub
+- Managed via Streamlit Secrets in deployment
+- Never committed to version control
 
 ### 4. Deployment Safety
 - Removed all hardcoded credentials
-- Prevented GitHub push protection violations
+- Resolved GitHub push protection violations
+- Ensured secure cloud configuration
 
 ---
 
@@ -184,19 +190,19 @@ streamlit run ui.py
 
 ## Key Highlights
 
-- End-to-end AI + Graph system
-- Cloud deployment with Neo4j AuraDB
-- Real-time natural language querying
-- Clean separation of components
+- End-to-end AI and graph-based system
+- Fully deployed cloud application (Streamlit + Neo4j AuraDB)
+- Real-time natural language querying over graph data
+- Modular and scalable architecture
 
 ---
 
 ## Future Improvements
 
-- Path highlighting between nodes
-- Advanced filtering options
-- Multi-hop reasoning with LLM
-- Improved UI responsiveness
+- Path highlighting between entities
+- Advanced graph filtering
+- Multi-hop reasoning using LLM
+- Enhanced UI interactions
 
 ---
 
